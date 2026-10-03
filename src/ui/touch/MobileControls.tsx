@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { VirtualJoystick } from '../components/VirtualJoystick';
 
 export default function MobileControls() {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
@@ -54,35 +55,25 @@ export default function MobileControls() {
         }
       `}</style>
 
-      {/* D-Pad */}
-      <div style={{
-        position: 'absolute',
-        bottom: '20px',
-        left: '20px',
-        display: 'grid',
-        gridTemplateColumns: '60px 60px 60px',
-        gridTemplateRows: '60px 60px 60px',
-        gap: '5px',
-        pointerEvents: 'auto',
-      }}>
-        <button 
-          style={{ gridColumn: '2', gridRow: '1', ...btnStyle }}
-          onTouchStart={handleTouchStart('w')} onTouchEnd={handleTouchEnd('w')}
-        >W</button>
-        <button 
-          style={{ gridColumn: '1', gridRow: '2', ...btnStyle }}
-          onTouchStart={handleTouchStart('a')} onTouchEnd={handleTouchEnd('a')}
-        >A</button>
-        <button 
-          style={{ gridColumn: '2', gridRow: '2', ...btnStyle }}
-          onTouchStart={handleTouchStart('s')} onTouchEnd={handleTouchEnd('s')}
-        >S</button>
-        <button 
-          style={{ gridColumn: '3', gridRow: '2', ...btnStyle }}
-          onTouchStart={handleTouchStart('d')} onTouchEnd={handleTouchEnd('d')}
-        >D</button>
-      </div>
-
+      {/* Virtual Joystick */}
+      <VirtualJoystick 
+        onMove={(data) => {
+          if (data.dy > 0.3) { dispatchKey('w', 'keydown'); dispatchKey('s', 'keyup'); }
+          else if (data.dy < -0.3) { dispatchKey('s', 'keydown'); dispatchKey('w', 'keyup'); }
+          else { dispatchKey('w', 'keyup'); dispatchKey('s', 'keyup'); }
+          
+          if (data.dx > 0.3) { dispatchKey('d', 'keydown'); dispatchKey('a', 'keyup'); }
+          else if (data.dx < -0.3) { dispatchKey('a', 'keydown'); dispatchKey('d', 'keyup'); }
+          else { dispatchKey('a', 'keyup'); dispatchKey('d', 'keyup'); }
+        }}
+        onEnd={() => {
+          dispatchKey('w', 'keyup');
+          dispatchKey('s', 'keyup');
+          dispatchKey('a', 'keyup');
+          dispatchKey('d', 'keyup');
+        }}
+      />
+      
       {/* Action Buttons */}
       <div style={{
         position: 'absolute',
