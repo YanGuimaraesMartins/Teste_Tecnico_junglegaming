@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useCallback } from 'react';
+﻿import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { usePixiApp } from '../../game/hooks/usePixiApp';
@@ -10,39 +10,6 @@ export default function GameScreen() {
   const navigate = useNavigate();
   const { mutate: submitMatch } = useSubmitMatch();
   const hasSubmitted = useRef(false);
-  const mainRef = useRef<HTMLElement>(null);
-
-  // Request fullscreen on mobile
-  const requestFullscreen = useCallback(() => {
-    const el = mainRef.current || document.documentElement;
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (!isTouchDevice) return;
-    
-    try {
-      if (el.requestFullscreen) {
-        el.requestFullscreen().catch(() => {});
-      } else if ((el as any).webkitRequestFullscreen) {
-        (el as any).webkitRequestFullscreen();
-      }
-    } catch (_) { /* ignore */ }
-
-    // Lock to landscape if supported
-    try {
-      if (screen.orientation && (screen.orientation as any).lock) {
-        (screen.orientation as any).lock('landscape').catch(() => {});
-      }
-    } catch (_) { /* ignore */ }
-  }, []);
-
-  // Auto-fullscreen on first touch
-  useEffect(() => {
-    const handler = () => {
-      requestFullscreen();
-      document.removeEventListener('touchstart', handler);
-    };
-    document.addEventListener('touchstart', handler, { once: true });
-    return () => document.removeEventListener('touchstart', handler);
-  }, [requestFullscreen]);
 
   useEffect(() => {
     if (status === 'FINISHED' && engineRef.current) {
@@ -80,7 +47,7 @@ export default function GameScreen() {
   for (let i = 0; i < 3; i++) {
     hearts.push(
       <span key={i} style={{ opacity: i < hp ? 1 : 0.3, color: '#ef4444' }}>
-        ❤️
+        &#x2764;&#xFE0F;
       </span>
     );
   }
@@ -88,7 +55,7 @@ export default function GameScreen() {
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
   return (
-    <main ref={mainRef} style={{ width: '100vw', height: '100dvh', position: 'relative', background: '#000', overflow: 'hidden' }}>
+    <main style={{ width: '100vw', height: '100dvh', position: 'relative', background: '#000', overflow: 'hidden' }}>
       <div 
         role="status"
         aria-live="polite"
@@ -97,12 +64,12 @@ export default function GameScreen() {
           top: 0, 
           left: 0, 
           right: 0,
-          padding: '8px 16px',
+          padding: isTouchDevice ? '4px 12px' : '20px 40px',
           display: 'flex',
           justifyContent: 'space-between',
           color: 'white', 
           fontFamily: 'monospace', 
-          fontSize: isTouchDevice ? '0.9rem' : '1.5rem',
+          fontSize: isTouchDevice ? '0.85rem' : '1.5rem',
           textShadow: '1px 1px 4px black',
           zIndex: 10,
           background: 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%)'
@@ -112,7 +79,7 @@ export default function GameScreen() {
           <div>SCORE: {score.toString().padStart(4, '0')}</div>
           <div>TIME: {Math.max(0, Math.ceil(timeRemaining / 1000))}s</div>
         </div>
-        <div style={{ display: 'flex', gap: '0.3rem', fontSize: isTouchDevice ? '1.2rem' : '2rem' }}>
+        <div style={{ display: 'flex', gap: '0.3rem', fontSize: isTouchDevice ? '1rem' : '2rem' }}>
           {hearts}
         </div>
       </div>
