@@ -1,4 +1,4 @@
-import { useLocation, Link } from 'react-router-dom';
+﻿import { useLocation, Link } from 'react-router-dom';
 
 export default function ResultScreen() {
   const location = useLocation();
@@ -15,28 +15,31 @@ export default function ResultScreen() {
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center', 
-      height: '100%',
+      height: '100dvh',
+      padding: '16px',
       backgroundImage: 'radial-gradient(circle at center, #7f1d1d 0%, #450a0a 100%)',
     }}>
       <div className="glass-panel" style={{
-        padding: '3rem',
+        padding: 'clamp(1.5rem, 4vw, 3rem)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: '1.5rem',
-        minWidth: '400px',
+        width: '100%',
+        maxWidth: '420px',
         animation: 'slideIn 0.4s ease-out'
       }}>
         <h1 style={{ 
-          fontSize: '3rem', 
+          fontSize: 'clamp(2rem, 8vw, 3rem)', 
           margin: 0, 
           color: '#f87171',
-          textShadow: '0 0 20px rgba(248, 113, 113, 0.4)'
+          textShadow: '0 0 20px rgba(248, 113, 113, 0.4)',
+          textAlign: 'center'
         }}>
           GAME OVER
         </h1>
         
-        <p style={{ color: 'var(--color-text-muted)', margin: 0, fontSize: '1.2rem', textTransform: 'uppercase' }}>
+        <p style={{ color: 'var(--color-text-muted)', margin: 0, fontSize: 'clamp(0.9rem, 3vw, 1.2rem)', textTransform: 'uppercase' }}>
           Reason: <span style={{ color: 'white' }}>{reason}</span>
         </p>
 
@@ -50,21 +53,21 @@ export default function ResultScreen() {
           gap: '1rem',
           marginTop: '1rem'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'clamp(1.1rem, 4vw, 1.5rem)' }}>
             <span>Final Score:</span>
             <span style={{ color: '#60a5fa', fontWeight: 'bold' }}>{score}</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2rem', color: '#9ca3af' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'clamp(0.9rem, 3vw, 1.2rem)', color: '#9ca3af' }}>
             <span>Time Survived:</span>
             <span>{timeSurvived}s</span>
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem', width: '100%', marginTop: '1.5rem' }}>
-          <Link to="/" className="btn-secondary" style={{ flex: 1 }}>
+        <div style={{ display: 'flex', gap: '0.5rem', width: '100%', marginTop: '1.5rem' }}>
+          <Link to="/" className="btn-secondary" style={{ flex: 1, whiteSpace: 'nowrap', padding: '12px 16px', fontSize: 'clamp(0.8rem, 2.5vw, 1rem)' }}>
             Main Menu
           </Link>
-          <Link to="/game" className="btn-primary" style={{ flex: 1 }}>
+          <Link to="/game" className="btn-primary" style={{ flex: 1, whiteSpace: 'nowrap', padding: '12px 16px', fontSize: 'clamp(0.8rem, 2.5vw, 1rem)' }}>
             Play Again
           </Link>
         </div>

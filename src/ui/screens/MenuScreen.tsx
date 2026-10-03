@@ -28,7 +28,7 @@ export default function MenuScreen() {
           background: 'linear-gradient(to right, #3b82f6, #60a5fa)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
-          textShadow: '0 0 20px rgba(59, 130, 246, 0.3)'
+          textShadow: '0 0 20px rgba(59, 130, 246, 0.3)', whiteSpace: 'nowrap'
         }}>
           PIRATE BATTLE
         </h1>
@@ -50,3 +50,4 @@ export default function MenuScreen() {
     </main>
   );
 }
+
