@@ -1,5 +1,7 @@
 # 🏴‍☠️ Pirate Battle - Space Edition
 
+🎮 **Jogue agora:** [Pirate Battle](https://teste-tecnico-junglegaming.vercel.app/)
+
 Bem-vindo ao **Pirate Battle**, um jogo de batalha espacial 2D construído com **React**, **TypeScript** e **PixiJS**, desenvolvido como parte do desafio técnico.
 
 ## 🚀 Tecnologias e Stack
