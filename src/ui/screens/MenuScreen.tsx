@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 
 export default function MenuScreen() {
   return (
@@ -6,20 +6,24 @@ export default function MenuScreen() {
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center', 
-      height: '100%',
+      height: '100dvh',
+      padding: '16px',
       backgroundImage: 'radial-gradient(circle at center, #1e3a8a 0%, #0f172a 100%)',
+      touchAction: 'auto',
     }}>
       <div className="glass-panel" style={{
-        padding: '3rem',
+        padding: 'clamp(1.2rem, 4vw, 3rem)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '1.5rem',
+        gap: '1rem',
         animation: 'slideIn 0.5s ease-out, float 6s ease-in-out infinite',
-        minWidth: '400px'
+        width: '100%',
+        maxWidth: '420px',
+        touchAction: 'auto',
       }}>
         <h1 style={{ 
-          fontSize: '3rem', 
+          fontSize: 'clamp(1.5rem, 6vw, 3rem)', 
           margin: 0, 
           background: 'linear-gradient(to right, #3b82f6, #60a5fa)',
           WebkitBackgroundClip: 'text',
@@ -29,20 +33,20 @@ export default function MenuScreen() {
           PIRATE BATTLE
         </h1>
         
-        <p style={{ color: 'var(--color-text-muted)', margin: '0 0 1rem 0' }}>
+        <p style={{ color: 'var(--color-text-muted)', margin: '0 0 0.5rem 0', fontSize: 'clamp(0.8rem, 2.5vw, 1rem)' }}>
           Phase 8: High Seas Await
         </p>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
-          <Link to="/loading" className="btn-primary" style={{ width: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%', touchAction: 'auto' }}>
+          <Link to="/loading" className="btn-primary" style={{ width: '100%', touchAction: 'auto', fontSize: 'clamp(0.85rem, 2.5vw, 1.1rem)' }}>
             Start Game
           </Link>
           
-          <Link to="/options" className="btn-secondary" style={{ width: '100%' }}>
+          <Link to="/options" className="btn-secondary" style={{ width: '100%', touchAction: 'auto', fontSize: 'clamp(0.85rem, 2.5vw, 1.1rem)' }}>
             Options
           </Link>
           
-          <Link to="/leaderboard" className="btn-secondary" style={{ width: '100%' }}>
+          <Link to="/leaderboard" className="btn-secondary" style={{ width: '100%', touchAction: 'auto', fontSize: 'clamp(0.85rem, 2.5vw, 1.1rem)' }}>
             Rankings
           </Link>
         </div>

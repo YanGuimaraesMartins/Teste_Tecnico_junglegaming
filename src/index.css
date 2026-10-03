@@ -23,10 +23,8 @@
 html, body, #root {
   width: 100%;
   height: 100dvh;
-  height: 100vh; /* fallback */
+  height: 100vh;
   overflow: hidden;
-  touch-action: none;
-  -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
   overscroll-behavior: none;
@@ -42,6 +40,18 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
+}
+
+/* Only disable touch actions on the game canvas, not UI */
+canvas {
+  display: block;
+  touch-action: none;
+}
+
+/* Ensure all interactive elements are tappable on mobile */
+a, button, [role="button"], input, select, textarea {
+  touch-action: auto;
+  -webkit-touch-callout: default;
 }
 
 /* Focus visible - accessibility */
@@ -126,20 +136,4 @@ button, [role="button"] {
 }
 .btn-secondary:active {
   transform: translateY(0);
-}
-
-/* Responsive canvas */
-canvas {
-  display: block;
-}
-
-/* Mobile responsive adjustments */
-@media (max-width: 900px) {
-  .glass-panel {
-    padding: 16px !important;
-  }
-  .btn-primary, .btn-secondary {
-    padding: 10px 20px;
-    font-size: 0.95rem;
-  }
 }
