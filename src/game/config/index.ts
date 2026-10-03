@@ -1,7 +1,4 @@
-/**
- * Central Game Configuration Types
- * Phase 2 - Defines all core types and balance configurations.
- */
+
 
 // ─── Core Configurations ───────────────────────────────────────────────────
 
@@ -53,10 +50,10 @@ export interface GameConfig {
   arenaHeight: number;        // tiles
   tileSize: number;           // pixels per tile (visual only, can be part of GameConfig)
   seed: number;               // RNG seed for deterministic runs
-  
+
   // Match settings
   sessionDuration: number;    // seconds
-  
+
   // Entity configurations
   player: PlayerConfig;
   enemy: EnemyConfig;
@@ -71,9 +68,9 @@ export const DEFAULT_GAME_CONFIG: GameConfig = {
   arenaHeight: 30,
   tileSize: 64, // e.g. 64x64 pixels per tile
   seed: Math.floor(Math.random() * 1000000),
-  
+
   sessionDuration: 180, // 3 minutes by default
-  
+
   player: {
     maxSpeed: 300,
     acceleration: 600,
@@ -82,7 +79,7 @@ export const DEFAULT_GAME_CONFIG: GameConfig = {
     frontalCannonCooldown: 500, // 500ms
     lateralCannonCooldown: 1000, // 1000ms
   },
-  
+
   enemy: {
     chaser: {
       speedPercentOfPlayer: 0.7,
@@ -98,13 +95,13 @@ export const DEFAULT_GAME_CONFIG: GameConfig = {
       scoreValue: 1,
     },
   },
-  
+
   projectile: {
     speed: 600,
     ttl: 2000, // 2s
     damage: 1,
   },
-  
+
   spawn: {
     interval: 3000, // default spawn interval (can be configured via Options)
     maxConcurrent: 10,

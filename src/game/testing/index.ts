@@ -1,7 +1,3 @@
-/**
- * Game test hooks — exposed on window.__GAME_TEST_HOOKS__ for Playwright.
- * Implemented in Phase 4+.
- */
 export interface GameTestHooks {
   getState: () => unknown
   setTime: (ms: number) => void
@@ -22,4 +18,4 @@ declare global {
   }
 }
 
-export {}
+export { }

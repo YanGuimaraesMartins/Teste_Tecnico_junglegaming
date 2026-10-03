@@ -2,10 +2,10 @@
 
 export default function MenuScreen() {
   return (
-    <main style={{ 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center', 
+    <main style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       height: '100dvh',
       padding: '16px',
       backgroundImage: 'radial-gradient(circle at center, #1e3a8a 0%, #0f172a 100%)',
@@ -22,9 +22,9 @@ export default function MenuScreen() {
         maxWidth: '420px',
         touchAction: 'auto',
       }}>
-        <h1 style={{ 
-          fontSize: 'clamp(1.5rem, 6vw, 3rem)', 
-          margin: 0, 
+        <h1 style={{
+          fontSize: 'clamp(1.5rem, 6vw, 3rem)',
+          margin: 0,
           background: 'linear-gradient(to right, #3b82f6, #60a5fa)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
@@ -32,20 +32,16 @@ export default function MenuScreen() {
         }}>
           PIRATE BATTLE
         </h1>
-        
-        <p style={{ color: 'var(--color-text-muted)', margin: '0 0 0.5rem 0', fontSize: 'clamp(0.8rem, 2.5vw, 1rem)' }}>
-          Phase 8: High Seas Await
-        </p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%', touchAction: 'auto' }}>
           <Link to="/loading" className="btn-primary" style={{ width: '100%', touchAction: 'auto', fontSize: 'clamp(0.85rem, 2.5vw, 1.1rem)' }}>
             Start Game
           </Link>
-          
+
           <Link to="/options" className="btn-secondary" style={{ width: '100%', touchAction: 'auto', fontSize: 'clamp(0.85rem, 2.5vw, 1.1rem)' }}>
             Options
           </Link>
-          
+
           <Link to="/leaderboard" className="btn-secondary" style={{ width: '100%', touchAction: 'auto', fontSize: 'clamp(0.85rem, 2.5vw, 1.1rem)' }}>
             Rankings
           </Link>
