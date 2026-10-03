@@ -7,10 +7,9 @@ import App from './App'
 import './index.css'
 
 async function enableMocking() {
-  if (import.meta.env.DEV || import.meta.env.VITE_MSW_ENABLED === 'true') {
-    const { worker } = await import('./mocks/browser')
-    return worker.start({ onUnhandledRequest: 'bypass' })
-  }
+  // Sempre habilita o MSW (Mock Service Worker) para a API funcionar na Vercel sem backend real
+  const { worker } = await import('./mocks/browser')
+  return worker.start({ onUnhandledRequest: 'bypass' })
 }
 
 const queryClient = new QueryClient({

@@ -65,7 +65,7 @@ export default function LeaderboardScreen() {
               {loadingRanking && <p>Loading rankings...</p>}
               {errorRanking && <p>Failed to load rankings.</p>}
               {!loadingRanking && !errorRanking && rankingData?.data && rankingData.data.length === 0 && <p>No rankings yet.</p>}
-              {!loadingRanking && !errorRanking && rankingData?.data.map((p, i) => (
+              {!loadingRanking && !errorRanking && (rankingData?.data || []).map((p, i) => (
                 <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                   <span>{(page - 1) * 10 + i + 1}. {p.playerName}</span>
                   <span style={{ fontWeight: 'bold', color: '#60a5fa' }}>{p.score} pts</span>
@@ -79,7 +79,7 @@ export default function LeaderboardScreen() {
               {loadingHistory && <p>Loading history...</p>}
               {errorHistory && <p>Failed to load history.</p>}
               {!loadingHistory && !errorHistory && historyData?.data && historyData.data.length === 0 && <p>No history yet.</p>}
-              {!loadingHistory && !errorHistory && historyData?.data.map((m) => (
+              {!loadingHistory && !errorHistory && (historyData?.data || []).map((m) => (
                 <div key={m.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0', borderBottom: '1px solid rgba(255,255,255,0.1)', gap: '0.5rem', flexWrap: 'wrap' }}>
                   <span>{new Date(m.createdAt).toLocaleDateString()}</span>
                   <span>{m.duration}s ({m.endReason})</span>
