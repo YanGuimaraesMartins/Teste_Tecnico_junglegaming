@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import { Application } from 'pixi.js';
 import { GameEngine } from '../engine/GameEngine';
 import type { MatchStatus } from '../config';
@@ -8,7 +8,7 @@ export function usePixiApp() {
   const [score, setScore] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [status, setStatus] = useState<MatchStatus>('READY');
-  const [hp, setHp] = useState(3); // Player initial HP
+  const [hp, setHp] = useState(3);
   const engineRef = useRef<GameEngine | null>(null);
 
   useEffect(() => {
@@ -18,10 +18,13 @@ export function usePixiApp() {
     let isInitDone = false;
     const app = new Application();
 
+    const GAME_WIDTH = 800;
+    const GAME_HEIGHT = 600;
+
     const init = async () => {
       await app.init({
-        width: 800,
-        height: 600,
+        width: GAME_WIDTH,
+        height: GAME_HEIGHT,
         backgroundColor: 0x1e90ff,
         resolution: window.devicePixelRatio || 1,
         autoDensity: true,
@@ -36,8 +39,25 @@ export function usePixiApp() {
 
       if (containerRef.current) {
         containerRef.current.appendChild(app.canvas);
-        // Stylize the canvas
-        app.canvas.style.border = '2px solid #333';
+        
+        const resizeCanvas = () => {
+          const parent = containerRef.current;
+          if (!parent || !app.canvas) return;
+          const w = parent.clientWidth || window.innerWidth;
+          const h = parent.clientHeight || window.innerHeight;
+          const scale = Math.min(w / GAME_WIDTH, h / GAME_HEIGHT);
+          const scaledW = Math.floor(GAME_WIDTH * scale);
+          const scaledH = Math.floor(GAME_HEIGHT * scale);
+          app.canvas.style.width = scaledW + 'px';
+          app.canvas.style.height = scaledH + 'px';
+          app.canvas.style.position = 'absolute';
+          app.canvas.style.left = Math.floor((w - scaledW) / 2) + 'px';
+          app.canvas.style.top = Math.floor((h - scaledH) / 2) + 'px';
+        };
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        (app as unknown as Record<string, unknown>)._resizeCleanup = () => window.removeEventListener('resize', resizeCanvas);
       }
 
       engineRef.current = new GameEngine(app, setScore, setTimeRemaining, setStatus, setHp);
@@ -52,6 +72,8 @@ export function usePixiApp() {
         engineRef.current = null;
       }
       if (isInitDone) {
+        const cleanup = (app as unknown as Record<string, unknown>)._resizeCleanup;
+        if (typeof cleanup === 'function') cleanup();
         if (app.canvas.parentNode) {
           app.canvas.parentNode.removeChild(app.canvas);
         }

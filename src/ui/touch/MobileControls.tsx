@@ -1,29 +1,60 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState, useCallback, useRef } from 'react';
 import { VirtualJoystick } from '../components/VirtualJoystick';
 
 export default function MobileControls() {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const activeKeysRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    setIsTouchDevice(window.matchMedia('(pointer: coarse)').matches);
+    setIsTouchDevice(
+      'ontouchstart' in window || 
+      window.matchMedia('(pointer: coarse)').matches ||
+      navigator.maxTouchPoints > 0
+    );
   }, []);
 
-  if (!isTouchDevice) return null;
+  const pressKey = useCallback((key: string) => {
+    if (!activeKeysRef.current.has(key)) {
+      activeKeysRef.current.add(key);
+      window.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true }));
+    }
+  }, []);
 
-  // Simulate key presses
-  const dispatchKey = (key: string, type: 'keydown' | 'keyup') => {
-    window.dispatchEvent(new KeyboardEvent(type, { key }));
-  };
+  const releaseKey = useCallback((key: string) => {
+    if (activeKeysRef.current.has(key)) {
+      activeKeysRef.current.delete(key);
+      window.dispatchEvent(new KeyboardEvent('keyup', { key, bubbles: true }));
+    }
+  }, []);
+
+  const handleJoystickMove = useCallback((data: { dx: number; dy: number }) => {
+    if (data.dy > 0.3) { pressKey('w'); releaseKey('s'); }
+    else if (data.dy < -0.3) { pressKey('s'); releaseKey('w'); }
+    else { releaseKey('w'); releaseKey('s'); }
+
+    if (data.dx > 0.3) { pressKey('d'); releaseKey('a'); }
+    else if (data.dx < -0.3) { pressKey('a'); releaseKey('d'); }
+    else { releaseKey('a'); releaseKey('d'); }
+  }, [pressKey, releaseKey]);
+
+  const handleJoystickEnd = useCallback(() => {
+    releaseKey('w');
+    releaseKey('s');
+    releaseKey('a');
+    releaseKey('d');
+  }, [releaseKey]);
 
   const handleTouchStart = (key: string) => (e: React.TouchEvent) => {
     e.preventDefault();
-    dispatchKey(key, 'keydown');
+    pressKey(key);
   };
 
   const handleTouchEnd = (key: string) => (e: React.TouchEvent) => {
     e.preventDefault();
-    dispatchKey(key, 'keyup');
+    releaseKey(key);
   };
+
+  if (!isTouchDevice) return null;
 
   return (
     <div style={{
@@ -32,11 +63,10 @@ export default function MobileControls() {
       pointerEvents: 'none',
       zIndex: 15,
     }}>
-      {/* Portrait Warning Overlay */}
       <div className="portrait-warning" style={{
         position: 'absolute',
         inset: 0,
-        backgroundColor: 'rgba(0,0,0,0.9)',
+        backgroundColor: 'rgba(0,0,0,0.95)',
         color: 'white',
         display: 'none',
         flexDirection: 'column',
@@ -45,8 +75,8 @@ export default function MobileControls() {
         zIndex: 100,
         pointerEvents: 'auto',
       }}>
-        <h2 style={{ marginBottom: '1rem' }}>Rotate your device</h2>
-        <p>This game requires Landscape orientation.</p>
+        <h2 style={{ marginBottom: '1rem', fontSize: '1.8rem' }}>Deite o celular</h2>
+        <p style={{ fontSize: '1.1rem', color: '#9ca3af' }}>Este jogo requer orientacao Landscape.</p>
       </div>
 
       <style>{`
@@ -55,61 +85,48 @@ export default function MobileControls() {
         }
       `}</style>
 
-      {/* Virtual Joystick */}
       <VirtualJoystick 
-        onMove={(data) => {
-          if (data.dy > 0.3) { dispatchKey('w', 'keydown'); dispatchKey('s', 'keyup'); }
-          else if (data.dy < -0.3) { dispatchKey('s', 'keydown'); dispatchKey('w', 'keyup'); }
-          else { dispatchKey('w', 'keyup'); dispatchKey('s', 'keyup'); }
-          
-          if (data.dx > 0.3) { dispatchKey('d', 'keydown'); dispatchKey('a', 'keyup'); }
-          else if (data.dx < -0.3) { dispatchKey('a', 'keydown'); dispatchKey('d', 'keyup'); }
-          else { dispatchKey('a', 'keyup'); dispatchKey('d', 'keyup'); }
-        }}
-        onEnd={() => {
-          dispatchKey('w', 'keyup');
-          dispatchKey('s', 'keyup');
-          dispatchKey('a', 'keyup');
-          dispatchKey('d', 'keyup');
-        }}
+        onMove={handleJoystickMove}
+        onEnd={handleJoystickEnd}
       />
       
-      {/* Action Buttons */}
       <div style={{
         position: 'absolute',
-        bottom: '20px',
-        right: '20px',
+        bottom: '15px',
+        right: '15px',
         display: 'flex',
-        gap: '10px',
+        gap: '12px',
         pointerEvents: 'auto',
-        alignItems: 'center'
+        alignItems: 'flex-end',
+        touchAction: 'none',
       }}>
         <button 
-          style={{ ...btnStyle, width: '70px', height: '70px', borderRadius: '35px' }}
+          style={{ ...btnStyle, width: '60px', height: '60px', borderRadius: '30px', fontSize: '0.9rem' }}
           onTouchStart={handleTouchStart('q')} onTouchEnd={handleTouchEnd('q')}
-        >Q</button>
+        >LEFT</button>
         <button 
-          style={{ ...btnStyle, width: '80px', height: '80px', borderRadius: '40px', background: 'rgba(239, 68, 68, 0.4)' }}
+          style={{ ...btnStyle, width: '75px', height: '75px', borderRadius: '50%', background: 'rgba(239, 68, 68, 0.5)', border: '2px solid rgba(239, 68, 68, 0.7)', fontSize: '0.8rem' }}
           onTouchStart={handleTouchStart(' ')} onTouchEnd={handleTouchEnd(' ')}
-        >SPACE</button>
+        >FIRE</button>
         <button 
-          style={{ ...btnStyle, width: '70px', height: '70px', borderRadius: '35px' }}
+          style={{ ...btnStyle, width: '60px', height: '60px', borderRadius: '30px', fontSize: '0.9rem' }}
           onTouchStart={handleTouchStart('e')} onTouchEnd={handleTouchEnd('e')}
-        >E</button>
+        >RIGHT</button>
       </div>
     </div>
   );
 }
 
-const btnStyle = {
-  background: 'rgba(255, 255, 255, 0.2)',
-  border: '2px solid rgba(255, 255, 255, 0.4)',
+const btnStyle: React.CSSProperties = {
+  background: 'rgba(255, 255, 255, 0.15)',
+  border: '2px solid rgba(255, 255, 255, 0.35)',
   borderRadius: '8px',
   color: 'white',
   fontWeight: 'bold',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  userSelect: 'none' as const,
-  WebkitUserSelect: 'none' as const,
+  userSelect: 'none',
+  WebkitUserSelect: 'none',
+  touchAction: 'none',
 };

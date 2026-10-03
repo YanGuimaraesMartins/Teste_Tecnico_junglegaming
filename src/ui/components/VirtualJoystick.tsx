@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+﻿import { useEffect, useRef } from 'react';
 import nipplejs from 'nipplejs';
 
 interface VirtualJoystickProps {
@@ -8,45 +8,57 @@ interface VirtualJoystickProps {
 
 export const VirtualJoystick: React.FC<VirtualJoystickProps> = ({ onMove, onEnd }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const managerRef = useRef<any>(null);
+  const managerRef = useRef<ReturnType<typeof nipplejs.create> | null>(null);
+  const onMoveRef = useRef(onMove);
+  const onEndRef = useRef(onEnd);
+
+  onMoveRef.current = onMove;
+  onEndRef.current = onEnd;
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    managerRef.current = nipplejs.create({
+    const manager = nipplejs.create({
       zone: containerRef.current,
       mode: 'static',
-      position: { left: '50%', bottom: '50%' },
-      color: 'white',
-      size: 100,
+      position: { left: '50%', top: '50%' },
+      color: 'rgba(255, 255, 255, 0.5)',
+      size: 120,
+      restOpacity: 0.6,
     });
 
-    managerRef.current.on('move', (_: any, data: any) => {
-      // Normalize dx and dy to -1 to 1 based on force/angle
-      const dx = Math.cos(data.angle.radian) * Math.min(data.force, 1);
-      const dy = -Math.sin(data.angle.radian) * Math.min(data.force, 1);
-      onMove({ dx, dy });
+    managerRef.current = manager;
+
+    manager.on('move', (_evt: unknown, data: { angle?: { radian: number }; force?: number }) => {
+      if (!data.angle || !data.force) return;
+      const force = Math.min(data.force / 2, 1);
+      const rad = data.angle.radian;
+      const dx = Math.cos(rad) * force;
+      const dy = Math.sin(rad) * force;
+      onMoveRef.current({ dx, dy });
     });
 
-    managerRef.current.on('end', () => {
-      onEnd();
+    manager.on('end', () => {
+      onEndRef.current();
     });
 
     return () => {
-      managerRef.current?.destroy();
+      manager.destroy();
+      managerRef.current = null;
     };
-  }, [onMove, onEnd]);
+  }, []);
 
   return (
     <div
       ref={containerRef}
       style={{
         position: 'absolute',
-        bottom: '80px',
-        left: '80px',
-        width: '100px',
-        height: '100px',
+        bottom: '10px',
+        left: '10px',
+        width: '140px',
+        height: '140px',
         pointerEvents: 'auto',
+        touchAction: 'none',
       }}
     />
   );
