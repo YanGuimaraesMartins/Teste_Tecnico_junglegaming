@@ -67,7 +67,7 @@ export default function LeaderboardScreen() {
               {!loadingRanking && !errorRanking && rankingData?.data && rankingData.data.length === 0 && <p>No rankings yet.</p>}
               {!loadingRanking && !errorRanking && (rankingData?.data || []).map((p, i) => (
                 <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                  <span>{(page - 1) * 10 + i + 1}. {p.playerName}</span>
+                  <span>{(page - 1) * 5 + i + 1}. {p.playerName}</span>
                   <span style={{ fontWeight: 'bold', color: '#60a5fa' }}>{p.score} pts</span>
                 </div>
               ))}
@@ -103,7 +103,7 @@ export default function LeaderboardScreen() {
           <button 
             className="btn-secondary" 
             onClick={() => { setPage(p => p + 1); }}
-            disabled={tab === 'ranking' ? (page >= Math.ceil((rankingData?.total || 1) / (rankingData?.limit || 10))) : (page >= Math.ceil((historyData?.total || 1) / (historyData?.limit || 10)))}
+            disabled={tab === 'ranking' ? (page >= Math.ceil((rankingData?.total || 1) / (rankingData?.limit || 5))) : (page >= Math.ceil((historyData?.total || 1) / (historyData?.limit || 5)))}
             style={{ padding: '8px 16px', fontSize: 'clamp(0.7rem, 2.5vw, 1rem)' }}
           >
             Next

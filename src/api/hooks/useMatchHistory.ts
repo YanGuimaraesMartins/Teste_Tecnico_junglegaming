@@ -7,7 +7,7 @@ export function useMatchHistory(playerId: string, page: number) {
     queryKey: ['history', playerId, page],
     queryFn: async () => {
       const { data } = await apiClient.get<GetHistoryResponse>('/history', {
-        params: { playerId, page, limit: 10 },
+        params: { playerId, page, limit: 5 },
       });
       return data;
     },
